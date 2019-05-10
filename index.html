@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="EN">
+ <head>
+  <title>Chess Board</title>
+  <meta charset="UTF-8">
+  <style>
+   body{background-color: #eeeeee;}
+   .available {  background-color: green !important; }
+   .pos	{  background-color: blue !important; }
+   .box { text-align: center; background-color: #eeeeee; }
+   .centered { display: inline-block; margin: 0; }
+   .chess-board { border-spacing: 0; border-collapse: collapse; }
+   .chess-board th { padding: .5em; }
+   .chess-board td { border: 1px solid; width: 5em; height: 5em; text-align: center; vertical-align: middle; }
+   .chess-board .white { background: #f0d9b5; }
+   .chess-board .black { background: #b58863; }
+  </style>
+ </head>
+ <body>
+
+ <div class="box">
+  <div class="centered">
+
+  <table class="chess-board">
+   <tbody id = "board">
+    <tr>
+     <th></th>
+     <th>A</th>
+     <th>B</th>
+     <th>C</th>
+     <th>D</th>
+     <th>E</th>
+     <th>F</th>
+     <th>G</th>
+     <th>H</th>
+    </tr>
+    <tr>
+     <th>8</th>
+     <td class="white" id="A8"></td>
+     <td class="black" id="B8"></td>
+     <td class="white" id="C8"></td>
+     <td class="black" id="D8"></td>
+     <td class="white" id="E8"></td>
+     <td class="black" id="F8"></td>
+     <td class="white" id="G8"></td>
+     <td class="black" id="H8"></td>
+    </tr>
+    <tr>
+     <th>7</th>
+     <td class="black" id="A7"></td>
+     <td class="white" id="B7"></td>
+     <td class="black" id="C7"></td>
+     <td class="white" id="D7"></td>
+     <td class="black" id="E7"></td>
+     <td class="white" id="F7"></td>
+     <td class="black" id="G7"></td>
+     <td class="white" id="H7"></td>
+    </tr>
+    <tr>
+     <th>6</th>
+     <td class="white" id="A6"></td>
+     <td class="black" id="B6"></td>
+     <td class="white" id="C6"></td>
+     <td class="black" id="D6"></td>
+     <td class="white" id="E6"></td>
+     <td class="black" id="F6"></td>
+     <td class="white" id="G6"></td>
+     <td class="black" id="H6"></td>
+    </tr>
+    <tr>
+     <th>5</th>
+     <td class="black" id="A5"></td>
+     <td class="white" id="B5"></td>
+     <td class="black" id="C5"></td>
+     <td class="white" id="D5"></td>
+     <td class="black" id="E5"></td>
+     <td class="white" id="F5"></td>
+     <td class="black" id="G5"></td>
+     <td class="white" id="H5"></td>
+    </tr>
+    <tr>
+     <th>4</th>
+     <td class="white" id="A4"></td>
+     <td class="black" id="B4"></td>
+     <td class="white" id="C4"></td>
+     <td class="black" id="D4"></td>
+     <td class="white" id="E4"></td>
+     <td class="black" id="F4"></td>
+     <td class="white" id="G4"></td>
+     <td class="black" id="H4"></td>
+    </tr>
+    <tr>
+     <th>3</th>
+     <td class="black" id="A3"></td>
+     <td class="white" id="B3"></td>
+     <td class="black" id="C3"></td>
+     <td class="white" id="D3"></td>
+     <td class="black" id="E3"></td>
+     <td class="white" id="F3"></td>
+     <td class="black" id="G3"></td>
+     <td class="white" id="H3"></td>
+    </tr>
+    <tr>
+     <th>2</th>
+     <td class="white" id="A2"></td>
+     <td class="black" id="B2"></td>
+     <td class="white" id="C2"></td>
+     <td class="black" id="D2"></td>
+     <td class="white" id="E2"></td>
+     <td class="black" id="F2"></td>
+     <td class="white" id="G2"></td>
+     <td class="black" id="H2"></td>
+    </tr>
+    <tr>
+     <th>1</th>
+     <td class="black" id="A1"></td>
+     <td class="white" id="B1"></td>
+     <td class="black" id="C1"></td>
+     <td class="white" id="D1"></td>
+     <td class="black" id="E1"></td>
+     <td class="white" id="F1"></td>
+     <td class="black" id="G1"></td>
+     <td class="white" id="H1"></td>
+    </tr>
+   </tbody>
+  </table>
+
+  </div>
+ </div>
+	<script>
+		document.getElementById("board").addEventListener("click", (event)=> {
+			if(event.target.tagName != 'TD'){
+				return
+			}
+
+            //Убираем все цвета ( позиция и возможные ходы)
+			for(let i of document.getElementsByClassName("pos")){
+				i.classList.remove("pos")
+			}
+
+			for(let i of document.getElementsByTagName("td")){
+				i.classList.remove("available")
+			}
+
+            //Получаем все доступные ходы
+			event.target.classList.add('pos')
+
+            //Закрашиваем все доступные ходы зеленым цветом
+			let steps = s(event.target.id)
+			for(let step of steps){
+				document.getElementById(step).classList.add("available")
+			}
+
+
+		})
+		
+
+		function s(pos){
+            //Устанавливаем размер поля
+			var axisY = ['A','B','C','D','E','F','G','H']
+			var axisX = 8
+
+            //Определяем координаты позиции
+			var y = +axisY.indexOf(pos.slice(0,-1).toUpperCase()) + 1
+			var x = +pos.slice(1)
+
+			var steps = []
+
+            //Проверяем есть ли заданная позиция на поле
+			if(x <= axisX && x > 0 && y >= 0){
+                //Проверяем возможность хода конем из заданной позиции, сначала для оси X ,потом для Y
+				let stepX = valid([x,y], axisX, axisY.length)
+				let stepY = valid([y,x], axisX, axisY.length)
+
+                //Заполняем массив доступными ходами
+				for(let step of stepX){
+					steps.push(axisY[step[1]-1] + (step[0]))
+				}
+				for(let step of stepY){
+					steps.push(axisY[step[0]-1] + (step[1]))
+				}
+				return steps
+			}else{
+				alert('Позиция не найдена')
+			}
+			
+			function valid(pos,x,y){
+				let firstSteps = []
+				let steps = []
+
+				if(pos[0]+2 <= x && pos[0]+2 >0){
+					firstSteps.push(pos[0]+2)
+				}
+				if(pos[0]-2 <= x && pos[0]-2 >0){
+					firstSteps.push(pos[0]-2)
+				}
+
+				for(let i in firstSteps){
+					if(pos[1] + 1 <= y && pos[1] + 1 >0){
+						steps.push([firstSteps[i], pos[1] + 1])
+					}
+
+					if(pos[1] - 1 <= y && pos[1] - 1 >0){
+						steps.push([firstSteps[i], pos[1] - 1])
+					}
+
+				}
+				return steps
+			}
+		}
+
+
+	</script>
+
+</body>
+</html>
